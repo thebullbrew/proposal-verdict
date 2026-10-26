@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Proposal Verdict — Second-Opinion Proposal Builder</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-32.png">
+<style>
+:root{--bg:#110D18;--surface:#1B1426;--text:#F1EBF5;--gold:#C5A059;--velvet:#6B4A7A;--muted:#B9AEC4;--line:#3A2E4D;--good:#7FC98A;--warn:#E0B15C;--bad:#E07A7A}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Georgia,'Times New Roman',serif;line-height:1.5}
+.wrap{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+.eyebrow{letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-size:.72rem;text-align:center}
+h1{font-size:2.4rem;text-align:center;margin:.2em 0 .1em;font-weight:500}h2{color:var(--gold);border-bottom:1px solid var(--line);padding-bottom:6px;font-weight:500}
+.sub{text-align:center;color:var(--muted);max-width:700px;margin:0 auto 20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;margin:16px 0;box-shadow:0 12px 32px rgba(0,0,0,.45)}
+.velvet{background:linear-gradient(135deg,#241733,var(--velvet));border-color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+label{display:block;font-size:.85rem;color:var(--muted)}input{width:100%;margin-top:4px;padding:10px;background:#120C1C;color:var(--text);border:1px solid var(--line);border-radius:8px;font-size:1rem;font-family:inherit}
+.big{font-size:2rem;color:var(--gold)}table{width:100%;border-collapse:collapse;font-size:.95rem}th,td{padding:8px;border-bottom:1px solid var(--line);text-align:right}th:first-child,td:first-child{text-align:left}
+button{background:var(--gold);color:#171021;border:0;padding:11px 18px;border-radius:8px;font-family:inherit;font-weight:bold;cursor:pointer;margin:4px 4px 4px 0}
+button.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.seal{width:170px;height:170px;border-radius:50%;margin:10px auto;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;background:radial-gradient(circle at 35% 30%,#8A639C,var(--velvet) 65%);border:3px double var(--gold);color:#fff;font-weight:bold;letter-spacing:.04em;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.pull{font-style:italic;font-size:1.15rem;text-align:center;color:var(--text)}
+.flag{padding:8px 12px;border-radius:8px;margin:6px 0;background:#241733}.ok{color:var(--good)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+.small{font-size:.85rem;color:var(--muted)} .row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--line)}
+#printArea{background:#fff;color:#111;padding:28px;border-radius:4px}
+#printArea h2{color:#333;border-color:#999}#printArea .big{color:#6B4A1A}
+@media print{body{background:#fff}.no-print{display:none!important}.wrap{max-width:none}#printCard{box-shadow:none;border:0}}
+@media(max-width:600px){h1{font-size:1.8rem}}
+</style></head><body><div class="wrap">
+<p class="eyebrow">✦ Velvet Dusk · For Advisors &amp; Broker-Dealer Reps ✦</p>
+<h1>The Proposal Verdict</h1>
+<p class="sub">A second-opinion proposal in one page. Stop selling a switch on feeling — price the fees, the risk fit, and the payback, then let the verdict do the talking.</p>
+
+<div class="card no-print"><h2>White Label</h2><div class="grid">
+<label>Firm name<input id="firm" value="Sterling Harbor Wealth"></label>
+<label>Advisor name<input id="advisor" value="Alex Morgan, CFP®"></label>
+<label>Prospect name<input id="prospect" value="Jordan Ellis"></label>
+<label>Portfolio value ($)<input id="pv" type="number" value="500000"></label>
+<label>Prospect age<input id="age" type="number" value="45"></label>
+<label>Years to retirement / horizon<input id="horizon" type="number" value="20"></label>
+<label>Risk tolerance (1–100)<input id="tol" type="number" value="55"></label>
+<label>One-time switching / transfer / tax cost ($)<input id="switchCost" type="number" value="2500"></label>
+</div></div>
+
+<div class="grid no-print">
+<div class="card"><h2>Current Portfolio</h2>
+<label>Advisor fee %<input id="cFee" type="number" step="0.01" value="1.00"></label>
+<label>Avg fund expense ratio %<input id="cExp" type="number" step="0.01" value="0.85"></label>
+<label>Other / trading cost %<input id="cOther" type="number" step="0.01" value="0.20"></label>
+<label>Expected gross return %<input id="cGross" type="number" step="0.1" value="7.0"></label>
+<label>Risk score (1–100)<input id="cRisk" type="number" value="78"></label>
+</div>
+<div class="card velvet"><h2>Proposed Portfolio</h2>
+<label>Advisor fee %<input id="pFee" type="number" step="0.01" value="0.75"></label>
+<label>Avg fund expense ratio %<input id="pExp" type="number" step="0.01" value="0.25"></label>
+<label>Other / trading cost %<input id="pOther" type="number" step="0.01" value="0.10"></label>
+<label>Expected gross return %<input id="pGross" type="number" step="0.1" value="7.0"></label>
+<label>Risk score (1–100)<input id="pRisk" type="number" value="58"></label>
+</div></div>
+
+<div class="card no-print"><h2>The Math</h2><div id="math"></div></div>
+<div class="card no-print"><div class="seal" id="seal">—</div><p class="pull" id="verdictQuote"></p><div id="riskFlags"></div><p class="small">Verdict logic: <strong>COMPELLING SWITCH</strong> if annual savings exceed 0.15% of the portfolio AND switching cost pays back in under 24 months. <strong>NOT WORTH MOVING</strong> if there are no annual savings, or the wealth gap at your horizon does not exceed the switching cost. Otherwise <strong>MARGINAL GAIN</strong>.</p></div>
+
+<div class="card no-print"><h2>Ending Wealth — Sensitivity by Horizon</h2><table><thead><tr><th>Horizon</th><th>Current</th><th>Proposed</th><th>Wealth Gap</th></tr></thead><tbody id="sens"></tbody></table></div>
+
+<div class="card" id="printCard"><div id="printArea"></div>
+<div class="no-print" style="margin-top:14px"><button onclick="copySummary()">Copy Summary</button><button class="ghost" onclick="window.print()">Print / Save PDF</button><span id="copied" class="small"></span></div></div>
+
+<div class="card no-print"><h2>Save This Proposal</h2><button onclick="saveScenario()">Save Scenario</button><div id="saved"></div></div>
+
+<div class="card no-print"><h2>The Method</h2><p>All-in cost is advisor fee + fund expenses + other/trading costs. Net return is gross return minus all-in cost. Ending wealth is portfolio × (1 + net return)<sup>years</sup>. Payback is switching cost divided by annual dollar savings. Risk is aligned when a portfolio score sits within 10 points of the prospect's tolerance.</p><p class="small">Hypothetical illustration only. Not a guarantee, not investment advice. Returns are assumed, not promised. Past performance does not predict future results. Verify fees, taxes, and transfer costs before acting.</p></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const money=n=>'$'+Math.round(n).toLocaleString('en-US');
+const pct=n=>n.toFixed(2)+'%';
+let lastSummary='';
+function num(id){return parseFloat($(id).value)||0}
+function calc(){
+ const pv=num('pv'), horizon=Math.max(1,num('horizon')), tol=num('tol'), sw=num('switchCost');
+ const cCost=num('cFee')+num('cExp')+num('cOther'), pCost=num('pFee')+num('pExp')+num('pOther');
+ const cNet=num('cGross')-cCost, pNet=num('pGross')-pCost;
+ const cDollars=pv*cCost/100, pDollars=pv*pCost/100, saveDollars=cDollars-pDollars, savePct=cCost-pCost;
+ const end=(net,y)=>pv*Math.pow(1+net/100,y);
+ const payback = saveDollars>0 ? (sw/saveDollars*12) : Infinity;
+ const gapH=end(pNet,horizon)-end(cNet,horizon);
+ let verdict, quote;
+ if(saveDollars<=0 || gapH<=sw){verdict='NOT WORTH MOVING';quote='“The move costs more than it earns. Stay put — or come back with a cheaper proposal.”';}
+ else if(savePct>0.15 && payback<24){verdict='COMPELLING SWITCH';quote='“Lower cost, a payback measured in months, and risk that finally fits the client. This switch earns its paperwork.”';}
+ else {verdict='MARGINAL GAIN';quote='“There is a gain here, but it is thin. Negotiate the fee or the switching cost before you move a dollar.”';}
+ $('math').innerHTML=
+  '<div class="row"><span>All-in cost — current</span><b>'+pct(cCost)+' · '+money(cDollars)+'/yr</b></div>'+
+  '<div class="row"><span>All-in cost — proposed</span><b>'+pct(pCost)+' · '+money(pDollars)+'/yr</b></div>'+
+  '<div class="row"><span>Annual fee savings</span><b class="big" style="font-size:1.3rem">'+money(saveDollars)+' ('+pct(savePct)+')</b></div>'+
+  '<div class="row"><span>Net return — current / proposed</span><b>'+pct(cNet)+' / '+pct(pNet)+'</b></div>'+
+  '<div class="row"><span>Wealth gap at '+horizon+' years</span><b>'+money(gapH)+'</b></div>'+
+  '<div class="row"><span>Switching-cost payback</span><b>'+(payback===Infinity?'Never':payback.toFixed(1)+' months')+'</b></div>';
+ $('seal').textContent=verdict; $('verdictQuote').textContent=quote;
+ const align=(risk,label)=>{const d=Math.abs(risk-tol);return '<div class="flag">'+label+' risk '+risk+' vs tolerance '+tol+': '+(d<=10?'<span class="ok">ALIGNED (within 10)</span>':'<span class="bad">MISMATCH — off by '+d+' points</span>')+'</div>';};
+ $('riskFlags').innerHTML=align(num('cRisk'),'Current')+align(num('pRisk'),'Proposed');
+ let rows=''; [10,20,30].forEach(y=>{rows+='<tr><td>'+y+' years</td><td>'+money(end(cNet,y))+'</td><td>'+money(end(pNet,y))+'</td><td>'+money(end(pNet,y)-end(cNet,y))+'</td></tr>';});
+ rows+='<tr><td><b>Your horizon: '+horizon+' years</b></td><td>'+money(end(cNet,horizon))+'</td><td>'+money(end(pNet,horizon))+'</td><td><b>'+money(gapH)+'</b></td></tr>';
+ $('sens').innerHTML=rows;
+ lastSummary=
+  $('firm').value+'\nPrepared by '+$('advisor').value+' for '+$('prospect').value+'\n\nTHE PROPOSAL VERDICT: '+verdict+'\n\n'+
+  'Portfolio: '+money(pv)+' · Horizon: '+horizon+' years · Risk tolerance: '+tol+'/100\n\n'+
+  'CURRENT: all-in cost '+pct(cCost)+' ('+money(cDollars)+'/yr), net return '+pct(cNet)+', risk '+num('cRisk')+'/100. Ending wealth at '+horizon+' years: '+money(end(cNet,horizon))+'. At 10/20/30 years: '+money(end(cNet,10))+' / '+money(end(cNet,20))+' / '+money(end(cNet,30))+'.'+'\n'+
+  'PROPOSED: all-in cost '+pct(pCost)+' ('+money(pDollars)+'/yr), net return '+pct(pNet)+', risk '+num('pRisk')+'/100. Ending wealth at '+horizon+' years: '+money(end(pNet,horizon))+'. At 10/20/30 years: '+money(end(pNet,10))+' / '+money(end(pNet,20))+' / '+money(end(pNet,30))+'.'+'\n\n'+
+  'Annual savings: '+money(saveDollars)+' · Wealth gap at horizon: '+money(gapH)+' · One-time switching cost: '+money(sw)+' · Payback: '+(payback===Infinity?'never':payback.toFixed(1)+' months')+'.\n\n'+
+  'In plain English: '+(saveDollars>0?'the proposed portfolio costs less every year, and that difference compounds.':'the proposed portfolio does not cost less — there is no fee case for moving.')+' Risk alignment was checked against the stated tolerance (within 10 points counts as aligned).\n\n'+
+  'Disclaimer: Hypothetical illustration only, not a guarantee and not investment advice. Returns are assumed, not promised.';
+ $('printArea').innerHTML='<p class="eyebrow" style="text-align:left;color:#6B4A1A">'+$('firm').value+'</p><h2>Proposal for '+$('prospect').value+'</h2><p>Prepared by '+$('advisor').value+'</p><p><strong>Verdict: '+verdict+'</strong></p><pre style="white-space:pre-wrap;font-family:Georgia,serif">'+lastSummary.split('\n').slice(3).join('\n')+'</pre>';
+ renderSaved();
+}
+function copySummary(){navigator.clipboard.writeText(lastSummary).then(()=>{$('copied').textContent=' Copied.';});}
+function getSaved(){try{return JSON.parse(localStorage.getItem('proposalVerdictScenarios')||'[]')}catch(e){return[]}}
+function saveScenario(){const s=getSaved();const data={};document.querySelectorAll('input').forEach(i=>data[i.id]=i.value);s.push({name:($('prospect').value||'Prospect')+' — '+new Date().toLocaleDateString(),data});localStorage.setItem('proposalVerdictScenarios',JSON.stringify(s));renderSaved();}
+function renderSaved(){const s=getSaved();$('saved').innerHTML=s.length?s.map((x,i)=>'<div class="row"><span>'+x.name+'</span><span><button class="ghost" onclick="loadScenario('+i+')">Load</button><button class="ghost" onclick="delScenario('+i+')">Delete</button></span></div>').join(''):'<p class="small">Nothing saved yet. Saved scenarios live only in this browser.</p>';}
+function loadScenario(i){const s=getSaved();if(!s[i])return;Object.keys(s[i].data).forEach(k=>{if($(k))$(k).value=s[i].data[k]});calc();}
+function delScenario(i){const s=getSaved();s.splice(i,1);localStorage.setItem('proposalVerdictScenarios',JSON.stringify(s));renderSaved();}
+document.querySelectorAll('input').forEach(i=>i.addEventListener('input',calc));
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+calc();
+</script></body></html>
